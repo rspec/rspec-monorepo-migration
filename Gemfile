@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+gem 'repository_merger', git: 'https://github.com/yujinakayama/repository_merger.git', branch: 'main'
 
-# gem "rails"
+group :development do
+  gem 'rspec', '~> 3.10'
+  gem 'rubocop', '~> 1.22'
+end
