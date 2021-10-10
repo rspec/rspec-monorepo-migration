@@ -94,7 +94,7 @@ RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.dest_path.join
           .to eq(commit_fingerprints_in_original_repos.sort.join("\n"))
       end
 
-      it 'has same contents as the original branch', pending: !expected_results[:contents] do
+      it 'has same contents as the original branches', pending: !expected_results[:contents] do
         expect(list_of_files_with_digest('monorepo'))
           .to eq(list_of_files_with_digest('original_repos', only: original_repo_names))
       end
