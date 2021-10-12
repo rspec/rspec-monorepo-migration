@@ -1,14 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe 'original RSpec repositories', if: Dir.exist?(PathHelper.work_path.join('original_repos')) do
+RSpec.describe 'original RSpec repositories' do
   include FileHelper
   include GitHelper
-
-  around do |example|
-    Dir.chdir(PathHelper.work_path.join('original_repos')) do
-      example.run
-    end
-  end
+  include PathHelper
 
   def self.maintenance_branches_in(repo_path)
     Dir.chdir(repo_path) do
@@ -675,7 +670,9 @@ RSpec.describe 'original RSpec repositories', if: Dir.exist?(PathHelper.work_pat
     }
   }.each do |repo_name, refs|
     describe repo_name do
-      repo_path = repo_name
+      let(:repo_path) do
+        original_repos_path.join(repo_name)
+      end
 
       refs.each do |ref, expected_results|
         describe ref do

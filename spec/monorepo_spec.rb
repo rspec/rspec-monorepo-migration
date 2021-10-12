@@ -2,15 +2,10 @@
 
 require 'repository_merger/github_issue_reference'
 
-RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.work_path.join('monorepo')) do
+RSpec.describe 'merged RSpec monorepo' do
   include FileHelper
   include GitHelper
-
-  around do |example|
-    Dir.chdir(PathHelper.work_path) do
-      example.run
-    end
-  end
+  include PathHelper
 
   {
     'main'             => { graph: true,  contents: true  },
@@ -45,12 +40,12 @@ RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.work_path.join
       end
 
       let(:commit_fingerprints_in_monorepo) do
-        commit_fingerprints_in('monorepo', branch_name)
+        commit_fingerprints_in(monorepo_path, branch_name)
       end
 
       let(:commit_fingerprints_in_original_repos) do
         original_repo_names.sum([]) do |repo_name|
-          commit_fingerprints_in("original_repos/#{repo_name}", "origin/#{branch_name}").map do |fingerprint|
+          commit_fingerprints_in(original_repos_path.join(repo_name), "origin/#{branch_name}").map do |fingerprint|
             convert_original_commit_fingerprint(fingerprint, repo_name)
           end
         end
@@ -78,8 +73,8 @@ RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.work_path.join
       end
 
       before do
-        repo_paths = original_repo_names.map { |name| "original_repos/#{name}" }
-        repo_paths << 'monorepo'
+        repo_paths = original_repo_names.map { |name| original_repos_path.join(name) }
+        repo_paths << monorepo_path
 
         repo_paths.each do |repo_path|
           Dir.chdir(repo_path) do
@@ -95,8 +90,8 @@ RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.work_path.join
       end
 
       it 'has same contents as the original branches', pending: !expected_results[:contents] do
-        expect(list_of_files_with_digest('monorepo'))
-          .to eq(list_of_files_with_digest('original_repos', only: original_repo_names))
+        expect(list_of_files_with_digest(monorepo_path))
+          .to eq(list_of_files_with_digest(original_repos_path, only: original_repo_names))
       end
     end
   end
@@ -643,7 +638,7 @@ RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.work_path.join
 
       describe "#{new_tag_name} tag" do
         around do |example|
-          Dir.chdir('monorepo') do
+          Dir.chdir(monorepo_path) do
             example.run
           end
         end
@@ -657,7 +652,7 @@ RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.work_path.join
 
   describe 'v2.0.0.beta.9-core tag which is not reachable from any target branches' do
     around do |example|
-      Dir.chdir('monorepo') do
+      Dir.chdir(monorepo_path) do
         example.run
       end
     end

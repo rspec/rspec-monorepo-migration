@@ -16,4 +16,12 @@ module PathHelper
   def work_path
     project_root_path.join('work')
   end
+
+  def original_repos_path
+    work_path.join('original_repos')
+  end
+
+  def monorepo_path
+    work_path.join('rspec-monorepo')
+  end
 end

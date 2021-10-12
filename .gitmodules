@@ -1,0 +1,18 @@
+[submodule "work/original_repos/rspec"]
+	path = work/original_repos/rspec
+	url = https://github.com/yujinakayama/rspec.git
+[submodule "work/original_repos/rspec-core"]
+	path = work/original_repos/rspec-core
+	url = https://github.com/yujinakayama/rspec-core.git
+[submodule "work/original_repos/rspec-expectations"]
+	path = work/original_repos/rspec-expectations
+	url = https://github.com/yujinakayama/rspec-expectations.git
+[submodule "work/original_repos/rspec-mocks"]
+	path = work/original_repos/rspec-mocks
+	url = https://github.com/yujinakayama/rspec-mocks.git
+[submodule "work/original_repos/rspec-support"]
+	path = work/original_repos/rspec-support
+	url = https://github.com/yujinakayama/rspec-support.git
+[submodule "work/rspec-monorepo"]
+	path = work/rspec-monorepo
+	url = https://github.com/yujinakayama/rspec-monorepo.git

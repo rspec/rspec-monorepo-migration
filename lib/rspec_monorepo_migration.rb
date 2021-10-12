@@ -6,7 +6,15 @@ require 'repository_merger/github_issue_reference'
 class RSpecMonorepoMigration
   WORK_DIR = 'work'
 
-  MONOREPO_DIR = 'monorepo'
+  ORIGINAL_REPO_PATHS = %w[
+    rspec
+    rspec-core
+    rspec-expectations
+    rspec-mocks
+    rspec-support
+  ].map { |name| File.join('original_repos', name) }.freeze
+
+  MONOREPO_PATH = 'rspec-monorepo'
 
   TAG_NAMES_UNREACHABLE_FROM_TARGET_BRANCHES = %w[
     v2.0.0.beta.9
@@ -139,46 +147,9 @@ class RSpecMonorepoMigration
 
   def configuration
     @configuration ||= RepositoryMerger::Configuration.new(
-      original_repo_paths: fetch_original_repos_if_needed,
-      monorepo_path: create_monorepo_if_needed,
+      original_repo_paths: ORIGINAL_REPO_PATHS,
+      monorepo_path: MONOREPO_PATH,
       verbose_logging: verbose_logging
     )
-  end
-
-  def fetch_original_repos_if_needed
-    repo_urls = %w[
-      https://github.com/yujinakayama/rspec.git
-      https://github.com/yujinakayama/rspec-core.git
-      https://github.com/yujinakayama/rspec-expectations.git
-      https://github.com/yujinakayama/rspec-mocks.git
-      https://github.com/yujinakayama/rspec-support.git
-    ]
-
-    original_repos_dir = 'original_repos'
-
-    Dir.mkdir(original_repos_dir) unless Dir.exist?(original_repos_dir)
-
-    Dir.chdir(original_repos_dir) do |current_directory|
-      repo_urls.map do |repo_url|
-        repo_name = File.basename(repo_url, '.git')
-
-        unless Dir.exist?(repo_name)
-          system("git clone #{repo_url}")
-        end
-
-        File.join(current_directory, repo_name)
-      end
-    end
-  end
-
-  def create_monorepo_if_needed
-    unless Dir.exist?(MONOREPO_DIR)
-      Dir.mkdir(MONOREPO_DIR)
-      Dir.chdir(MONOREPO_DIR) do
-        system('git init')
-      end
-    end
-
-    MONOREPO_DIR
   end
 end
