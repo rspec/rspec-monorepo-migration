@@ -7,6 +7,45 @@ RSpec.describe 'merged RSpec monorepo' do
   include GitHelper
   include PathHelper
 
+  def commit_fingerprints_in(repo_path, revision_id)
+    Dir.chdir(repo_path) do
+      git(['log', '--format=%ci %ce, %ai %ae: %s', revision_id]).split("\n")
+    end
+  end
+
+  def convert_original_commit_fingerprint(fingerprint, repo_name)
+    fingerprint = fingerprint.sub(': ', ": [#{repo_name.sub(/\Arspec-/, '')}] ")
+
+    fingerprint = RepositoryMerger::GitHubIssueReference.convert_repo_local_references_to_absolute_ones_in(
+      fingerprint,
+      username: 'rspec',
+      repo_name: repo_name
+    )
+
+    # Some commits have wrongly quoted author/committer emails
+    fingerprint.gsub("'raysanchez1979@gmail.com'", 'raysanchez1979@gmail.com')
+  end
+
+  GitObject = Struct.new(:mode, :type, :id, :name)
+
+  def git_tree_id_of_commit(repo_path, revision_id)
+    Dir.chdir(repo_path) do
+      output = git(['cat-file', '-p', revision_id])
+      match_data = output.match(/^tree (?<sha>[0-9a-f]+)/)
+      match_data[:sha]
+    end
+  end
+
+  def git_objects_in_tree(repo_path, tree_id)
+    Dir.chdir(repo_path) do
+      output = git(['cat-file', '-p', tree_id])
+
+      output.split("\n").map do |line|
+        GitObject.new(*line.split(/\s+/))
+      end
+    end
+  end
+
   {
     'main'             => { graph: true,  contents: true  },
     '2-2-maintenance'  => { graph: true,  contents: true  },
@@ -33,12 +72,6 @@ RSpec.describe 'merged RSpec monorepo' do
     '3-10-maintenance' => { graph: true,  contents: true  }
   }.each do |branch_name, expected_results|
     describe "#{branch_name} branch" do
-      def commit_fingerprints_in(repo_path, revision_id)
-        Dir.chdir(repo_path) do
-          git(['log', '--format=%ci %ce, %ai %ae: %s', revision_id]).split("\n")
-        end
-      end
-
       let(:commit_fingerprints_in_monorepo) do
         commit_fingerprints_in(monorepo_path, branch_name)
       end
@@ -49,19 +82,6 @@ RSpec.describe 'merged RSpec monorepo' do
             convert_original_commit_fingerprint(fingerprint, repo_name)
           end
         end
-      end
-
-      def convert_original_commit_fingerprint(fingerprint, repo_name)
-        fingerprint = fingerprint.sub(': ', ": [#{repo_name.sub(/\Arspec-/, '')}] ")
-
-        fingerprint = RepositoryMerger::GitHubIssueReference.convert_repo_local_references_to_absolute_ones_in(
-          fingerprint,
-          username: 'rspec',
-          repo_name: repo_name
-        )
-
-        # Some commits have wrongly quoted author/committer emails
-        fingerprint.gsub("'raysanchez1979@gmail.com'", 'raysanchez1979@gmail.com')
       end
 
       let(:original_repo_names) do
@@ -89,9 +109,30 @@ RSpec.describe 'merged RSpec monorepo' do
           .to eq(commit_fingerprints_in_original_repos.sort.join("\n"))
       end
 
-      it 'has same contents as the original branches', pending: !expected_results[:contents] do
+      it 'has same contents as the original branches, comparing by digests of files', pending: !expected_results[:contents] do
         expect(list_of_files_with_digest(monorepo_path))
           .to eq(list_of_files_with_digest(original_repos_path, only: original_repo_names))
+      end
+
+      it 'has same contents as the original branches, comparing by git tree object ids', pending: !expected_results[:contents] do
+        monorepo_tree_id = git_tree_id_of_commit(monorepo_path, branch_name)
+
+        if branch_name.start_with?('2')
+          expect(git_objects_in_tree(monorepo_path, monorepo_tree_id)).to contain_exactly(
+            an_object_having_attributes(name: 'rspec',              id: git_tree_id_of_commit(original_repos_path.join('rspec'), branch_name)),
+            an_object_having_attributes(name: 'rspec-core',         id: git_tree_id_of_commit(original_repos_path.join('rspec-core'), branch_name)),
+            an_object_having_attributes(name: 'rspec-expectations', id: git_tree_id_of_commit(original_repos_path.join('rspec-expectations'), branch_name)),
+            an_object_having_attributes(name: 'rspec-mocks',        id: git_tree_id_of_commit(original_repos_path.join('rspec-mocks'), branch_name))
+          )
+        else
+          expect(git_objects_in_tree(monorepo_path, monorepo_tree_id)).to contain_exactly(
+            an_object_having_attributes(name: 'rspec',              id: git_tree_id_of_commit(original_repos_path.join('rspec'), branch_name)),
+            an_object_having_attributes(name: 'rspec-core',         id: git_tree_id_of_commit(original_repos_path.join('rspec-core'), branch_name)),
+            an_object_having_attributes(name: 'rspec-expectations', id: git_tree_id_of_commit(original_repos_path.join('rspec-expectations'), branch_name)),
+            an_object_having_attributes(name: 'rspec-mocks',        id: git_tree_id_of_commit(original_repos_path.join('rspec-mocks'), branch_name)),
+            an_object_having_attributes(name: 'rspec-support',      id: git_tree_id_of_commit(original_repos_path.join('rspec-support'), branch_name))
+          )
+        end
       end
     end
   end
