@@ -13,10 +13,10 @@ module FileHelper
       target_paths = only || ['.']
 
       Find.find(*target_paths) do |path|
-        if File.file?(path) || File.symlink?(path)
-          files << path.delete_prefix('./')
-        elsif File.basename(path) == '.git'
+        if File.basename(path) == '.git'
           Find.prune
+        elsif File.file?(path) || File.symlink?(path)
+          files << path.delete_prefix('./')
         end
       end
     end

@@ -95,6 +95,8 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   Kernel.srand config.seed
+
+  config.fail_if_no_examples = true if ENV['CI']
 end
 
 Dir.glob('./spec/support/**/*.rb').sort.each { |file| require file }
