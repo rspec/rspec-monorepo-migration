@@ -7,6 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 0 # To test original repos
           submodules: true
       - uses: ruby/setup-ruby@v1
         with:
