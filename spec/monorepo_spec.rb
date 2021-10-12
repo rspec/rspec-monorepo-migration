@@ -2,12 +2,12 @@
 
 require 'repository_merger/github_issue_reference'
 
-RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.dest_path.join('monorepo')) do
+RSpec.describe 'merged RSpec monorepo', if: Dir.exist?(PathHelper.work_path.join('monorepo')) do
   include FileHelper
   include GitHelper
 
   around do |example|
-    Dir.chdir(PathHelper.dest_path) do
+    Dir.chdir(PathHelper.work_path) do
       example.run
     end
   end

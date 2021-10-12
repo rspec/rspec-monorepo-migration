@@ -4,7 +4,7 @@ require 'repository_merger'
 require 'repository_merger/github_issue_reference'
 
 class RSpecMonorepoMigration
-  DEST_DIR = 'dest'
+  WORK_DIR = 'work'
 
   MONOREPO_DIR = 'monorepo'
 
@@ -21,7 +21,7 @@ class RSpecMonorepoMigration
   end
 
   def run
-    Dir.chdir(dest_dir) do
+    Dir.chdir(work_dir) do
       import_tags_unreachable_from_target_branches
       import_target_branches
       import_all_tags
@@ -32,9 +32,9 @@ class RSpecMonorepoMigration
     exit(1)
   end
 
-  def dest_dir
-    Dir.mkdir(DEST_DIR) unless Dir.exist?(DEST_DIR)
-    DEST_DIR
+  def work_dir
+    Dir.mkdir(WORK_DIR) unless Dir.exist?(WORK_DIR)
+    WORK_DIR
   end
 
   def import_tags_unreachable_from_target_branches

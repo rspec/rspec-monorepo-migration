@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe 'original RSpec repositories', if: Dir.exist?(PathHelper.dest_path.join('original_repos')) do
+RSpec.describe 'original RSpec repositories', if: Dir.exist?(PathHelper.work_path.join('original_repos')) do
   include FileHelper
   include GitHelper
 
   around do |example|
-    Dir.chdir(PathHelper.dest_path.join('original_repos')) do
+    Dir.chdir(PathHelper.work_path.join('original_repos')) do
       example.run
     end
   end

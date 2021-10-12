@@ -13,7 +13,7 @@ module PathHelper
     project_root_path.join('tmp')
   end
 
-  def dest_path
-    project_root_path.join('dest')
+  def work_path
+    project_root_path.join('work')
   end
 end
