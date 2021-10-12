@@ -2,9 +2,9 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   Exclude:
-    - 'dest/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'
+    - 'work/**/*'
   NewCops: enable
   SuggestExtensions: false
 
