@@ -101,7 +101,7 @@ class RSpecMonorepoMigration
   def target_branch_names
     @target_branch_names ||= begin
       all_branch_names = configuration.original_repos.flat_map { |repo| repo.branches.map(&:name) }.uniq.sort
-      ['origin/main'] + all_branch_names.grep(%r{\Aorigin/\d+-\d+-(maintenance|stable)\z})
+      %w[origin/main origin/4-0-dev] + all_branch_names.grep(%r{\Aorigin/\d+-\d+-(maintenance|stable)\z})
     end
   end
 

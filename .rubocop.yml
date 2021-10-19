@@ -17,6 +17,10 @@ Layout/FirstHashElementIndentation:
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
 Naming/HeredocDelimiterNaming:
   Enabled: false
 

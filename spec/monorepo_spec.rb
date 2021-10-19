@@ -69,7 +69,8 @@ RSpec.describe 'merged RSpec monorepo' do
     '3-7-maintenance'  => { graph: true,  contents: true  },
     '3-8-maintenance'  => { graph: true,  contents: true  },
     '3-9-maintenance'  => { graph: true,  contents: true  },
-    '3-10-maintenance' => { graph: true,  contents: true  }
+    '3-10-maintenance' => { graph: true,  contents: true  },
+    '4-0-dev'          => { graph: true,  contents: true  }
   }.each do |branch_name, expected_results|
     describe "#{branch_name} branch" do
       let(:commit_fingerprints_in_monorepo) do

@@ -35,12 +35,6 @@ Lint/ConstantDefinitionInBlock:
 Metrics/AbcSize:
   Max: 19
 
-# Offense count: 4
-# Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
-# IgnoredMethods: refine
-Metrics/BlockLength:
-  Max: 686
-
 # Offense count: 1
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
