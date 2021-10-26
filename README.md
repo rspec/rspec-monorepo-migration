@@ -1,4 +1,4 @@
-[![Test](https://github.com/yujinakayama/rspec-monorepo-migration/actions/workflows/test.yml/badge.svg)](https://github.com/yujinakayama/rspec-monorepo-migration/actions/workflows/test.yml)
+[![Test](https://github.com/rspec/rspec-monorepo-migration/actions/workflows/test.yml/badge.svg)](https://github.com/rspec/rspec-monorepo-migration/actions/workflows/test.yml)
 
 # RSpec monorepo migration
 
@@ -11,7 +11,7 @@ The core logic for merging repositories is in https://github.com/yujinakayama/re
 You should clone this repository with `--recurse-submodules` since it manages the RSpec repositories for the migration as git submodules:
 
 ```
-git clone --recurse-submodules https://github.com/yujinakayama/rspec-monorepo-migration.git
+git clone --recurse-submodules git@github.com:rspec/rspec-monorepo-migration.git
 ```
 
 Then run `exe/merge_rspec_repos` to import the history from the separate repos into `work/rspec-monorepo`:
