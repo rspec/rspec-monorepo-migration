@@ -3,7 +3,7 @@
 	url = https://github.com/yujinakayama/rspec-monorepo.git
 [submodule "work/original_repos/rspec"]
 	path = work/original_repos/rspec
-	url = https://github.com/rspec/rspec.git
+	url = https://github.com/rspec/rspec-metagem.git
 [submodule "work/original_repos/rspec-core"]
 	path = work/original_repos/rspec-core
 	url = https://github.com/rspec/rspec-core.git
