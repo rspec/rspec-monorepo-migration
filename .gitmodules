@@ -1,6 +1,6 @@
 [submodule "work/rspec-monorepo"]
 	path = work/rspec-monorepo
-	url = https://github.com/yujinakayama/rspec-monorepo.git
+	url = https://github.com/rspec/rspec.git
 [submodule "work/original_repos/rspec"]
 	path = work/original_repos/rspec
 	url = https://github.com/rspec/rspec-metagem.git
